@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    <title>台北前端社群</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="layout.css" type="text/css" />
+</head>
+<body>
+    <div id="fb-root"></div>
+    <div class="hide">
+        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 content">
+                <%-body%>
+                <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        					 <span class="sr-only">Toggle navigation</span>
+        					 <span class="icon-bar"></span>
+        					 <span class="icon-bar"></span>
+        					 <span class="icon-bar"></span>
+        				</button>
+                        <a class="navbar-brand" href="/">台北前端社群</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li<%if(menu==="index" ){%> class="active"<%}%>>
+                                <a href="/">首頁</a>
+                            </li>
+                            <li<%if(menu==="bookclub" ){%> class="active"<%}%>>
+                                <a href="/bookclub">讀書會</a>
+                            </li>
+                            <li<%if(menu==="facebook" ){%> class="active"<%}%>>
+                                <a href="/facebook">Facebook</a>
+                            </li>
+                            <li<%if(menu==="slack" ){%> class="active"<%}%>>
+                                <a href="/slack">Slack</a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <img class="userphoto hide">
+                            </li>
+                            <li class="dropdown">
+							    <a href="javascript:void(0);" class="dropdown-toggle username" data-toggle="dropdown">
+							        <span>登入</span>
+							        <strong class="caret hide"></strong>
+							    </a>
+    							<ul class="dropdown-menu usermenu hide">
+    								<li>
+    								    <a href="javascript:void(0);" class="myfb" target="_blank">我的Facebook</a>
+    								</li>
+    								<li>
+    									<a href="javascript:void(0);" class="logout">登出</a>
+    								</li>
+    							</ul>
+    						</li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="layout.js"></script>
+</body>
+</html>

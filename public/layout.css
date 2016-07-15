@@ -1,0 +1,24 @@
+.content {
+    margin-top: 65px;
+}
+
+.fb_iframe_widget {
+    padding: 14px 30px;
+}
+
+.userphoto {
+    width: 40px;
+    margin: 5px;
+    padding-left: 15px;
+    padding-bottom: 7.5px;
+}
+
+@media (min-width: 768px) {
+    .navbar-right {
+        margin-right: 0;
+    }
+    .userphoto {
+        padding-left: 0;
+        padding-bottom: 0;
+    }
+}
