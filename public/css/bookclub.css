@@ -1,0 +1,6 @@
+.nav-panel {
+    display:none;
+}
+blockquote small:before {
+    content: '';
+}
