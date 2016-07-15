@@ -12,6 +12,7 @@
   "dependencies": {
     "ejs": "^2.4.2",
     "express": "^4.14.0",
-    "express-ejs-layouts": "^2.1.0"
+    "express-ejs-layouts": "^2.1.0",
+    "express-logger": "0.0.3"
   }
 }

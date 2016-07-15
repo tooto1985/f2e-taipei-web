@@ -1,7 +1,9 @@
 var path = require("path");
 var express = require("express");
 var expressLayouts = require("express-ejs-layouts");
+var logger = require('express-logger');
 var app = express();
+app.use(logger({path: "/path/to/logfile.txt"}));
 app.set("view engine", "ejs");
 app.set("layout", "layout");
 app.use(expressLayouts);
