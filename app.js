@@ -1,3 +1,4 @@
+var FB = require('fb');
 var path = require("path");
 var express = require("express");
 var expressLayouts = require("express-ejs-layouts");
@@ -21,5 +22,17 @@ app.get("/facebook", function(req,res) {
 });
 app.get("/slack", function(req,res) {
     res.render("slack", {menu:"slack"});
+});
+app.get("/check", function(req, res) {
+    FB.setAccessToken(req.query.accessToken);
+    FB.api('/me', function(res) {
+        if (!res || res.error) {
+            console.log(!res ? 'error occurred' : res.error);
+            return;
+        }
+        console.log(res.id);
+        console.log(res.name);
+    });
+    res.send("ok");
 });
 app.listen(3000);

@@ -60,8 +60,18 @@ $(function() {
 
     function checkLoginState() {
         FB.getLoginStatus(function(response) {
+            checkAccessToken(response.authResponse);
             statusChangeCallback(response);
         });
+    }
+    
+    function checkAccessToken(data) {
+        if (data) {
+            $.get("check",{accessToken:data.accessToken},function() {
+                
+            });
+        }
+        
     }
 
     window.fbAsyncInit = function() {
@@ -72,6 +82,7 @@ $(function() {
     $(".username").click(function(e) {
         if (!isLogin) {
             FB.login(function(response) {
+                checkAccessToken(response.authResponse);
                 statusChangeCallback(response);
             });
             e.stopPropagation();
