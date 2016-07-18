@@ -1,10 +1,12 @@
-var FB = require('fb');
 var path = require("path");
 var express = require("express");
 var expressLayouts = require("express-ejs-layouts");
-var logger = require('express-logger');
+//var logger = require('express-logger');
+var cookieParser = require("cookie-parser");
+var admin = require("./routes/admin");
 var app = express();
-app.use(logger({path: "/path/to/logfile.txt"}));
+app.use(cookieParser());
+//app.use(logger({path: "/path/to/logfile.txt"}));
 app.set("layout extractScripts", true);
 app.set("layout extractStyles", true);
 app.set("view engine", "ejs");
@@ -23,16 +25,5 @@ app.get("/facebook", function(req,res) {
 app.get("/slack", function(req,res) {
     res.render("slack", {menu:"slack"});
 });
-app.get("/check", function(req, res) {
-    FB.setAccessToken(req.query.accessToken);
-    FB.api('/me', function(res) {
-        if (!res || res.error) {
-            console.log(!res ? 'error occurred' : res.error);
-            return;
-        }
-        console.log(res.id);
-        console.log(res.name);
-    });
-    res.send("ok");
-});
+app.use("/admin", admin);
 app.listen(3000);

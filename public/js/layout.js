@@ -12,7 +12,7 @@
     if (d.getElementById(id)) return;
     js = d.createElement(s);
     js.id = id;
-    js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.7&appId=1628843680680885";
+    js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.7&appId=1734247563504571";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk')); //facebook api
 
@@ -67,11 +67,10 @@ $(function() {
     
     function checkAccessToken(data) {
         if (data) {
-            $.get("check",{accessToken:data.accessToken},function() {
-                
-            });
+            document.cookie = "accessToken=" + data.accessToken + ";";
+        } else {
+            delete_cookie("accessToken");
         }
-        
     }
 
     window.fbAsyncInit = function() {
@@ -91,6 +90,7 @@ $(function() {
 
     $(".logout").click(function() {
         FB.logout(function(response) {
+            checkAccessToken();
             statusChangeCallback(response);
         });
     });
