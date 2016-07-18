@@ -1,0 +1,27 @@
+.nav-panel {
+    display:none;
+}
+blockquote small:before {
+    content: '';
+}
+.list{
+    display:none;
+}
+div[data-fbid] {
+    float: left;
+    padding: 5px;
+    margin: 5px;
+    background-color: #efefef;
+    width: 200px;
+    border-radius: 5px;
+}
+div[data-fbid] img {
+    float:left;
+}
+div[data-fbid] span {
+    display: table-cell;
+    height: 50px;
+    vertical-align: middle;
+    width: 140px;
+    padding-left: 10px;
+}

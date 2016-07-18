@@ -18,6 +18,8 @@
 
 
 $(function() {
+    var fblogin = new Event("fblogin");
+    var fblogout = new Event("fblogout");
     var isLogin = false;
 
     function delete_cookie(name) {
@@ -28,6 +30,7 @@ $(function() {
         isLogin = false;
         $(".username>.caret,.userphoto,.usermenu").addClass("hide");
         $(".username>span").text("登入");
+        window.dispatchEvent(fblogout);
     }
 
     function login() {
@@ -45,6 +48,7 @@ $(function() {
                     $(".username>span").text(userdata.name);
                     $(".userphoto").attr("src", response.data.url).show();
                     $(".myfb").attr("href", "https://www.facebook.com/" + userdata.id);
+                    window.dispatchEvent(fblogin);
                 }
             });
         });
@@ -95,5 +99,6 @@ $(function() {
         });
     });
 
+    $(".container-fluid").first().css("min-height", $(window).height()-$(".footer").show().height() + "px" );
 
 });

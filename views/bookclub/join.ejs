@@ -1,0 +1,67 @@
+<ul class="nav nav-tabs">
+	<li>
+		<a href="/bookclub">資訊</a>
+	</li>
+	<li>
+		<a href="/bookclub/list">書單</a>
+	</li>
+	<li class="active">
+		<a href="/bookclub/join">活動</a>
+	</li>
+</ul>
+
+<p></p>
+<div class="alert alert-dismissable alert-danger">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+		×
+	</button>
+	<h4>
+		請注意!
+	</h4> <strong>目前功能尚未完成，可能會造成無法正常操作！</strong></a>
+</div>
+
+<%for(var i=0;i<data.length;i++){var time=new Date(data[i].date);%>
+<div class="col-md-12">
+	<h2>場次#<%=(i+1)%></h2>
+	<blockquote>
+		<p><%=time.getFullYear()%>/<%=time.getMonth()+1%>/<%=time.getDate()%> <%=time.getHours()%>:<%=time.getMinutes()<10?"0"+time.getMinutes():time.getMinutes()%></p> 
+		<small>
+			<table data-date="<%=data[i].date%>">
+				<tr class="list">
+					<td>主持人</td>
+				</tr>
+				<tr class="list">
+					<td>
+						<%for(var j=0;j<data[i].host.length;j++){%>
+						<div data-fbid="<%=data[i].host[j]%>"></div>
+						<%}%>
+					</td>
+				</tr>				
+				<tr class="list">
+					<td>參與者</td>
+				</tr>
+				<tr class="list">
+					<td>
+						<%for(var j=0;j<data[i].user.length;j++){%>
+						<div data-fbid="<%=data[i].user[j]%>"></div>
+						<%}%>
+					</td>
+				</tr>				
+				<tr>
+					<td>
+						<button type="button" class="btn btn-primary btn-default btn-login">
+							請先登入
+						</button>
+					</td>
+				</tr>
+
+			</table>
+			
+		</small>
+	</blockquote>
+</div>
+<%}%>
+
+
+<link rel="stylesheet" href="/css/bookclub/join.css" type="text/css" />
+<script src="/js/bookclub/join.js"></script>

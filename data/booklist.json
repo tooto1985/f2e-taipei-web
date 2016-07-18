@@ -1,0 +1,20 @@
+[
+    {
+        "image":"http://im1.book.com.tw/image/getImage?i=http://www.books.com.tw/img/001/041/07/0010410726.jpg&w=170&h=240&v=48c118db",
+        "title":"JavaScript：優良部分",
+        "content":"大多數程式語言都包含好與不好的兩類成分，但 JavaScript 的後者似乎佔了不少比例，因為它是個開發與發表都很匆促、沒有時間精雕細琢的語言。這本權威書籍刮除了 JavaScript 中最可怕的功能，為大家呈現較為可靠、較可讀解、也較可維護的部分 JavaScript －－ 我們能用這部分功能建立真正具擴充性、又有效率的原始碼。",
+        "link":{
+            "url":"http://www.books.com.tw/products/0010410726",
+            "name":"博客來"
+        }
+    },
+    {
+        "image":"http://im2.book.com.tw/image/getImage?i=http://www.books.com.tw/img/001/059/46/0010594680.jpg&v=51efacf9&w=170&h=240",
+        "title":"Effective JavaScript 中文版",
+        "content":"Effective JavaScript 是由 68 個經過驗證、能夠幫助你寫出更好的 JavaScript 程式碼的具體作法所構成，並輔以實例來闡述說明。你會學到如何為每個專案挑選適當的程式寫作風格、管理無法預料的問題，並以更良好的方式來處理 JavaScript 程式設計的各個面向，諸如資料結構或共時性（concurrency）。",
+        "link":{
+            "url":"http://www.books.com.tw/products/0010594680",
+            "name":"博客來"
+        }
+    }
+]
