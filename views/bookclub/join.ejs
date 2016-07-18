@@ -9,7 +9,7 @@
 		<a href="/bookclub/join">活動</a>
 	</li>
 </ul>
-
+<%if(isHistory){%>
 <p></p>
 <div class="alert alert-dismissable alert-danger">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
@@ -17,9 +17,9 @@
 	</button>
 	<h4>
 		請注意!
-	</h4> <strong>目前功能尚未完成，可能會造成無法正常操作！</strong></a>
+	</h4> <strong>您現在瀏覽的過去舉辦讀書會的紀錄！</strong></a>
 </div>
-
+<%}%>
 <%for(var i=0;i<data.length;i++){var time=new Date(data[i].date);%>
 <div class="col-md-12">
 	<h2>場次#<%=(i+1)%></h2>
@@ -27,6 +27,12 @@
 		<p><%=time.getFullYear()%>/<%=time.getMonth()+1%>/<%=time.getDate()%> <%=time.getHours()%>:<%=time.getMinutes()<10?"0"+time.getMinutes():time.getMinutes()%></p> 
 		<small>
 			<table data-date="<%=data[i].date%>">
+				<tr>
+					<td>內容</td>
+				</tr>
+				<tr>
+					<td class="note"><%-data[i].note.replace(/\n/g,"<br>")%></td>
+				</tr>
 				<tr class="list">
 					<td>主持人</td>
 				</tr>
@@ -46,7 +52,8 @@
 						<div data-fbid="<%=data[i].user[j]%>"></div>
 						<%}%>
 					</td>
-				</tr>				
+				</tr>
+				<%if(!isHistory){%>
 				<tr>
 					<td>
 						<button type="button" class="btn btn-primary btn-default btn-login">
@@ -54,14 +61,11 @@
 						</button>
 					</td>
 				</tr>
-
+				<%}%>
 			</table>
-			
 		</small>
 	</blockquote>
 </div>
 <%}%>
-
-
 <link rel="stylesheet" href="/css/bookclub/join.css" type="text/css" />
 <script src="/js/bookclub/join.js"></script>

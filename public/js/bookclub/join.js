@@ -34,15 +34,14 @@ $(function() {
             $(".username").click();    
         } else if ($this.text() === "已參加") {
             FB.api('/me', function(userdata) {
-                $.getJSON("/bookclub/join/" + date + "/" + userdata.id + "/leave", function() {
+                $.getJSON("/bookclub/join/" + date + "/leave", function() {
                     $this.parent().parent().prev().find("div[data-fbid='" + userdata.id + "']").remove();
                     $this.text("參加").removeClass("btn-success");
                 });
             });
         } else if ($this.text() === "參加") {
             FB.api('/me', function(userdata) {
-                
-                $.getJSON("/bookclub/join/" + date + "/" + userdata.id + "/join", function() {
+                $.getJSON("/bookclub/join/" + date + "/join", function() {
                     $this.parent().parent().prev().find("td").append("<div data-fbid=\"" + userdata.id + "\"></div>");
                     $this.parent().parent().prev().find("div[data-fbid]").each(getFBdata);
                     $this.text("已參加").addClass("btn-success");                    

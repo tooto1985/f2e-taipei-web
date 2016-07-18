@@ -25,3 +25,11 @@ div[data-fbid] span {
     width: 140px;
     padding-left: 10px;
 }
+.note {
+    background-color: #efefef;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+    display: block;
+    color: black;
+}
