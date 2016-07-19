@@ -19,13 +19,16 @@ $(function() {
     
     function checkJoin(id) {
         $("table").each(function() {
-            if ($(this).find("div[data-fbid='" + id + "']").length) {
-                $(this).find(".btn-login").text("已參加").addClass("btn-success");
+            var $this = $(this);
+            var $btnlogin = $this.find(".btn-login");
+            if ($this.find(".user div[data-fbid='" + id + "']").length) {
+                $btnlogin.text("已參加").addClass("btn-success");
+            }
+            if ($this.find(".host div[data-fbid='" + id + "']").length) {
+                $btnlogin.text("主持人").addClass("btn-info");
             }
         });
     }
-    
-    
     
     $(".btn-login").click(function() {
         var $this = $(this);
@@ -36,7 +39,7 @@ $(function() {
             FB.api('/me', function(userdata) {
                 $.getJSON("/bookclub/join/" + date + "/leave", function() {
                     $this.parent().parent().prev().find("div[data-fbid='" + userdata.id + "']").remove();
-                    $this.text("參加").removeClass("btn-success");
+                    $this.text("參加").removeClass("btn-success").removeClass("btn-info");
                 });
             });
         } else if ($this.text() === "參加") {
@@ -44,7 +47,7 @@ $(function() {
                 $.getJSON("/bookclub/join/" + date + "/join", function() {
                     $this.parent().parent().prev().find("td").append("<div data-fbid=\"" + userdata.id + "\"></div>");
                     $this.parent().parent().prev().find("div[data-fbid]").each(getFBdata);
-                    $this.text("已參加").addClass("btn-success");                    
+                    $this.text("已參加").addClass("btn-success").removeClass("btn-info");                    
                 });
             });
         }
@@ -63,7 +66,7 @@ $(function() {
     
     
     $(window).on("fblogout",function() {
-        $(".btn-login").text("請先登入");
+        $(".btn-login").text("請先登入").removeClass("btn-success").removeClass("btn-info");
         $(".list").hide();
     });
     

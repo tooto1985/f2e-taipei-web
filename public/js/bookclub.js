@@ -11,5 +11,13 @@ $(function() {
     
     $(".gotoJoin").click(function() {
        location.href="/bookclub/join" ;
-    });    
+    });
+    
+    $(window).on("fblogin",function() {
+       //console.log("fblogin");
+    });
+    
+    $(window).on("fblogout",function() {
+       //console.log("fblogout");
+    });
 });

@@ -36,7 +36,7 @@
 				<tr class="list">
 					<td>主持人</td>
 				</tr>
-				<tr class="list">
+				<tr class="list host">
 					<td>
 						<%for(var j=0;j<data[i].host.length;j++){%>
 						<div data-fbid="<%=data[i].host[j]%>"></div>
@@ -46,7 +46,7 @@
 				<tr class="list">
 					<td>參與者</td>
 				</tr>
-				<tr class="list">
+				<tr class="list user">
 					<td>
 						<%for(var j=0;j<data[i].user.length;j++){%>
 						<div data-fbid="<%=data[i].user[j]%>"></div>
@@ -68,4 +68,5 @@
 </div>
 <%}%>
 <link rel="stylesheet" href="/css/bookclub/join.css" type="text/css" />
+<script src="/js/bookclub.js"></script>
 <script src="/js/bookclub/join.js"></script>
