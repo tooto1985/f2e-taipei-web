@@ -33,3 +33,6 @@ div[data-fbid] span {
     display: block;
     color: black;
 }
+.btn-create {
+    display:none;
+}

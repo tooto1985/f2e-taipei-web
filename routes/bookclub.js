@@ -74,7 +74,13 @@ router.get("/join/:date/:type", function(req, res) {
                             var index = user.indexOf(response.id);
                             var hasValue = index > -1;
                             if (req.params.type === "join" && !hasValue) {
-                                user.push(response.id);
+                                if (!data[i].max || (data[i].max && data[i].user.length + 1 <= data[i].max)) {
+                                    user.push(response.id);
+                                }
+                                else {
+                                    res.json(false);
+                                    return;
+                                }
                             }
                             if (req.params.type === "leave" && hasValue) {
                                 user.splice(index, 1);

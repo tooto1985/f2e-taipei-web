@@ -19,6 +19,11 @@
 		請注意!
 	</h4> <strong>您現在瀏覽的過去舉辦讀書會的紀錄！</strong></a>
 </div>
+<%}else{%>
+<p></p>
+<button type="button" class="btn btn-primary btn-default btn-create">
+	我想主持我的讀書會
+</button>
 <%}%>
 <%for(var i=0;i<data.length;i++){var time=new Date(data[i].date);%>
 <div class="col-md-12">
@@ -33,6 +38,11 @@
 				<tr>
 					<td class="note"><%-data[i].note.replace(/\n/g,"<br>")%></td>
 				</tr>
+				<%if(data[i].max){%>
+				<tr>
+					<td>人數上限<%=data[i].max%>人</td>
+				</tr>
+				<%}%>
 				<tr class="list">
 					<td>主持人</td>
 				</tr>
@@ -56,7 +66,7 @@
 				<%if(!isHistory){%>
 				<tr>
 					<td>
-						<button type="button" class="btn btn-primary btn-default btn-login">
+						<button type="button" class="btn btn-primary btn-default btn-login"<%if(data[i].max && data[i].user.length>=data[i].max){%> data-over="true"<%}%>>
 							請先登入
 						</button>
 					</td>
