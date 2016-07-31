@@ -61,13 +61,11 @@ $(function() {
             });
         }
     });
-    
+
     $(".btn-create").click(function() {
-       alert("coming soon!");
+       location.href="/bookclub/create";
     });
 
-    
-    
     $(window).on("fblogin",function() {
         FB.api('/me', function(userdata) {
             $(".btn-login").text("參加");
@@ -77,18 +75,11 @@ $(function() {
         });  
     });
     
-    
-    
     $(window).on("fblogout",function() {
         $(".btn-login").text("請先登入").removeClass("btn-success").removeClass("btn-info");
         $(".list").hide();
         $(".btn-create").hide();
     });
-    
-    
-    
-    
-
     
 });
 

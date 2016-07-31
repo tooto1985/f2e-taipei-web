@@ -1,0 +1,77 @@
+<ul class="nav nav-tabs">
+	<li>
+		<a href="/bookclub">資訊</a>
+	</li>
+	<li>
+		<a href="/bookclub/list">書單</a>
+	</li>
+	<li class="active">
+		<a href="/bookclub/join">活動</a>
+	</li>
+</ul>
+<p></p>
+<div class="col-md-12">
+	<form class="form-horizontal" role="form" method="post" action="/bookclub/create">
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				舉辦日期
+			</label>
+			<div class="col-sm-11">
+				<input type="date" name="date" class="form-control" min="<%=min%>" value="<%=wed%>" max="<%=max%>"  list="select-day" />
+				<datalist id="select-day">
+					<option label="建議日期"><%=wed%></option>
+				</datalist>
+				<p></p>
+				<div class="alert alert-dismissable alert-info">
+                	建議盡量以週三為主。
+                </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				開始時間
+			</label>
+			<div class="col-sm-11">
+				<input type="time" name="time" class="form-control" />
+				<p></p>
+				<div class="alert alert-dismissable alert-info">
+                	建議平日可從晚上七點開始。<br>
+                	(由於每個人的下班與交通時間不一定)
+                </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				人數限制
+			</label>
+			<div class="col-sm-11">
+				<select class="selectpicker" name="max">
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				書與進度
+			</label>
+			<div class="col-sm-11">
+				<textarea class="form-control" name="note"></textarea>
+				<p></p>
+				<div class="alert alert-dismissable alert-info">
+                	請附上書名與網址，並且指定閱讀的章節進度。
+                </div>				
+			</div>
+		</div>		
+		<div class="form-group">
+			<div class="col-sm-offset-1 col-sm-11">
+				<button type="submit" class="btn btn-default">
+					確定送出
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>

@@ -1,7 +1,9 @@
 var FB = require('fb');
 var fs = require("fs");
+var bodyParser = require("body-parser");
 var express = require("express");
 var router = express.Router();
+router.use(bodyParser());
 router.get("/", function(req, res) {
     res.render("bookclub", {
         menu: "bookclub"
@@ -101,6 +103,31 @@ router.get("/join/:date/:type", function(req, res) {
                 }
             });
         }
+    });
+});
+router.get("/create", function(req, res) {
+    var min = new Date().toISOString().split("T")[0];
+    var wed = new Date();
+    var max = new Date();
+    do {
+        wed.setDate(wed.getDate() + 1);
+    } while (wed.getDay() !== 3);
+    wed = wed.toISOString().split("T")[0];
+    max.setMonth(max.getMonth() + 1);
+    max = max.toISOString().split("T")[0];
+    res.render("bookclub/create", {
+        menu: "bookclub",
+        data: null,
+        isHistory: false,
+        min: min,
+        wed: wed,
+        max: max
+    });
+});
+router.post("/create", function(req, res) {
+    console.log(req.body);
+    res.render("bookclub/created", {
+        menu: "bookclub"
     });
 });
 module.exports = router;
