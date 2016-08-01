@@ -1,5 +1,8 @@
+var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
+var Db = require("../db");
+var joinDb = new Db(mongodbUri, "join");
+var listDb = new Db(mongodbUri, "booklist");
 var FB = require('fb');
-var fs = require("fs");
 var bodyParser = require("body-parser");
 var express = require("express");
 var router = express.Router();
@@ -10,56 +13,38 @@ router.get("/", function(req, res) {
     });
 });
 router.get("/list", function(req, res) {
-    fs.readFile("./data/booklist.json", "utf8", function(err, data) {
-        if (!err) {
-            data = JSON.parse(data);
-            res.render("bookclub/list", {
-                menu: "bookclub",
-                data: data
-            });
-        }
-        else {
-            res.redirect("/");
-        }
+    listDb.select({}, function(data) {
+        res.render("bookclub/list", {
+            menu: "bookclub",
+            data: data
+        });
+    }, function() {
+        res.redirect("/");
     });
 });
 router.get("/join", function(req, res) {
-    fs.readFile("./data/join.json", "utf8", function(err, data) {
-        if (!err) {
-            data = JSON.parse(data);
-            data = data.filter(function(a) {
-                return new Date().getTime() < a.date;
-            });
-            res.render("bookclub/join", {
-                menu: "bookclub",
-                data: data,
-                isHistory: false
-            });
-        }
-        else {
-            res.redirect("/");
-        }
+    joinDb.select({date:{$gt: new Date().getTime()},isShow: true}, function(data) {
+        res.render("bookclub/join", {
+            menu: "bookclub",
+            data: data,
+            isHistory: false
+        });
+    }, function() {
+        res.redirect("/");
     });
 });
 router.get("/history", function(req, res) {
-    fs.readFile("./data/join.json", "utf8", function(err, data) {
-        if (!err) {
-            data = JSON.parse(data);
-            data = data.filter(function(a) {
-                return new Date().getTime() >= a.date;
-            });
-            res.render("bookclub/join", {
-                menu: "bookclub",
-                data: data,
-                isHistory: true
-            });
-        }
-        else {
-            res.redirect("/");
-        }
-    });
+    joinDb.select({$query:{date:{$lte: new Date().getTime()},isShow: true},$orderby:{date:-1}}, function(data) {
+        res.render("bookclub/join", {
+            menu: "bookclub",
+            data: data,
+            isHistory: true
+        });
+    }, function() {
+        res.redirect("/");
+    });    
 });
-router.get("/join/:date/:type", function(req, res) {
+router.get("/join/:id/:type", function(req, res) {
     var token = req.cookies.accessToken;
     FB.setAccessToken(token);
     FB.api("/me", function(response) {
@@ -67,67 +52,95 @@ router.get("/join/:date/:type", function(req, res) {
             res.json(false);
         }
         else {
-            fs.readFile("./data/join.json", "utf8", function(err, data) {
-                if (!err) {
-                    data = JSON.parse(data);
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].date === parseInt(req.params.date)) {
-                            var user = data[i].user;
-                            var index = user.indexOf(response.id);
-                            var hasValue = index > -1;
-                            if (req.params.type === "join" && !hasValue) {
-                                if (!data[i].max || (data[i].max && data[i].user.length + 1 <= data[i].max)) {
-                                    user.push(response.id);
-                                }
-                                else {
-                                    res.json(false);
-                                    return;
-                                }
-                            }
-                            if (req.params.type === "leave" && hasValue) {
-                                user.splice(index, 1);
-                            }
-                            fs.writeFile("./data/join.json", JSON.stringify(data, null, 4), "utf8", function(err) {
-                                if (!err) {
-                                    res.json(true);
-                                }
-                                else {
-                                    res.json(false);
-                                }
-                            });
-                        }
+            joinDb.select({_id: joinDb.id(req.params.id)},function(data) {
+                var user = data[0].user;
+                var index = user.indexOf(response.id);
+                var hasValue = index > -1;
+                if (req.params.type === "join") {
+                    if (!hasValue && (!data[0].max || (data[0].max && user.length + 1 <= data[0].max))) {
+                        user.push(response.id);
+                    } else {
+                        res.json(false);
+                        return;
                     }
                 }
-                else {
-                    res.json(false);
+                if (req.params.type === "leave") {
+                    if (hasValue) {
+                        user.splice(index, 1);
+                    } else {
+                        res.json(false);
+                        return;
+                    }
                 }
+                joinDb.update(req.params.id,{user:user},function() {
+                    res.json(true);    
+                },function(data) {
+                    console.log(data);
+                    res.json(false);
+                });
+            },function() {
+                res.json(false);    
             });
         }
     });
 });
 router.get("/create", function(req, res) {
-    var min = new Date().toISOString().split("T")[0];
-    var wed = new Date();
-    var max = new Date();
-    do {
-        wed.setDate(wed.getDate() + 1);
-    } while (wed.getDay() !== 3);
-    wed = wed.toISOString().split("T")[0];
-    max.setMonth(max.getMonth() + 1);
-    max = max.toISOString().split("T")[0];
-    res.render("bookclub/create", {
-        menu: "bookclub",
-        data: null,
-        isHistory: false,
-        min: min,
-        wed: wed,
-        max: max
+    var token = req.cookies.accessToken;
+    FB.setAccessToken(token);
+    FB.api("/me", function(response) {
+        if (!response || response.error) {
+            res.redirect("/bookclub/join");
+        }
+        else {
+            var min = new Date().toISOString().split("T")[0];
+            var wed = new Date();
+            var max = new Date();
+            do {
+                wed.setDate(wed.getDate() + 1);
+            } while (wed.getDay() !== 3);
+            wed = wed.toISOString().split("T")[0];
+            max.setMonth(max.getMonth() + 1);
+            max = max.toISOString().split("T")[0];
+            res.render("bookclub/create", {
+                menu: "bookclub",
+                data: null,
+                isHistory: false,
+                min: min,
+                wed: wed,
+                max: max
+            });
+        }
     });
 });
 router.post("/create", function(req, res) {
-    console.log(req.body);
-    res.render("bookclub/created", {
-        menu: "bookclub"
+    var token = req.cookies.accessToken;
+    FB.setAccessToken(token);
+    FB.api("/me", function(response) {
+        if (!response || response.error) {
+            res.redirect("/bookclub/join");
+        }
+        else {
+            var joinObject = {
+                date: new Date(req.body.date + " " + req.body.time).getTime(),
+                note: req.body.note,
+                host: [response.id],
+                user: [],
+                max: parseInt(req.body.max),
+                isRead: false,
+                isShow: false
+            };
+            joinDb.insert(joinObject, function() {
+                res.render("bookclub/created", {
+                    menu: "bookclub",
+                    message: "我們將會盡快審核，謝謝您的熱情參與！"
+                });
+            }, function() {
+                res.render("bookclub/created", {
+                    menu: "bookclub",
+                    message: "由於技術上的問題發生錯誤，請與系統管理員聯絡，謝謝！"
+                });
+            });
+        }
     });
 });
 module.exports = router;
