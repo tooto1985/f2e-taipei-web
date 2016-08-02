@@ -37,19 +37,19 @@ $(function() {
     
     $(".btn-login").click(function() {
         var $this = $(this);
-        var date = $this.parent().parent().parent().parent().data("date");
+        var id = $this.parent().parent().parent().parent().data("id");
         if ($this.text() === "請先登入") {
             $(".username").click();    
         } else if ($this.text() === "已參加") {
             FB.api('/me', function(userdata) {
-                $.getJSON("/bookclub/join/" + date + "/leave", function() {
+                $.getJSON("/bookclub/join/" + id + "/leave", function() {
                     $this.parent().parent().prev().find("div[data-fbid='" + userdata.id + "']").remove();
                     $this.text("參加").removeClass("btn-success").removeClass("btn-info");
                 });
             });
         } else if ($this.text() === "參加") {
             FB.api('/me', function(userdata) {
-                $.getJSON("/bookclub/join/" + date + "/join", function(data) {
+                $.getJSON("/bookclub/join/" + id + "/join", function(data) {
                     if (data) {
                         $this.parent().parent().prev().find("td").append("<div data-fbid=\"" + userdata.id + "\"></div>");
                         $this.parent().parent().prev().find("div[data-fbid]").each(getFBdata);
