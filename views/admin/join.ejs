@@ -1,1 +1,47 @@
-join
+<p></p>
+<table class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th>編號</th>
+			<th>日期時間</th>
+			<th>主持人</th>
+			<th>人數</th>
+			<th>書與進度</th>
+			<th>審核</th>
+		</tr>
+	</thead>
+	<tbody>
+	<%
+	for(var i=0;i<data.length;i++) {
+		var status="active";
+		if (data[i].date>= new Date().getTime()) {
+			status="success";
+		}
+		if (!data[i].isRead) {
+			status="warning";
+		}
+		if (data[i].isRead && !data[i].isShow) {
+			status="danger";
+		}
+	%>
+		<tr data-id="<%=data[i]._id%>" class="<%=status%>">
+			<td><%=(i+1)%></td>
+			<td><%=new Date(data[i].date).toLocaleString()%></td>
+			<td>
+			<%for(var j=0;j<data[i].host.length;j++){%>
+				<div data-fbid="<%=data[i].host[j]%>"></div>
+			<%}%>
+			</td>
+			<td><%=data[i].user.length + ( data[i].max? "/"+data[i].max:"" )%></td>
+			<td><%=data[i].note%></td>
+			<td>
+				<input class="delete" type="button" value="刪除"></input>
+				<input class="reject" type="button" value="拒絕"></input>
+				<input class="resolve" type="button" value="通過"></input>
+				<input class="reset" type="button" value="未審"></input>
+			</td>
+		</tr>
+	<%}%>		
+	</tbody>
+</table>
+<script src="/js/admin/join.js"></script>

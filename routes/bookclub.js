@@ -114,20 +114,27 @@ router.get("/join/:id/:type", function(req, res) {
     });
 });
 router.get("/create", function(req, res) {
+    function getLocalDate(date) {
+        var a = date.toLocaleDateString().split("/");
+        a = a.map(function(a) {
+            return parseInt(a);
+        })
+        return a[2] + "-" + (a[0]<10?"0":"") + a[0] + "-" + (a[1]<10?"0":"") + a[1];
+    }
     isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
             res.redirect("/bookclub/join");
         }
         else {
-            var min = new Date().toISOString().split("T")[0];
+            var min = getLocalDate(new Date());
             var wed = new Date();
             var max = new Date();
             do {
                 wed.setDate(wed.getDate() + 1);
             } while (wed.getDay() !== 3);
-            wed = wed.toISOString().split("T")[0];
+            wed = getLocalDate(wed);
             max.setMonth(max.getMonth() + 1);
-            max = max.toISOString().split("T")[0];
+            max = getLocalDate(max);
             res.render("bookclub/create", {
                 menu: "bookclub",
                 data: null,
@@ -158,12 +165,14 @@ router.post("/create", function(req, res) {
             joinDb.insert(joinObject, function() {
                 res.render("bookclub/created", {
                     menu: "bookclub",
-                    message: "我們將會盡快審核，謝謝您的熱情參與！"
+                    message: "我們將會盡快審核，謝謝您的熱情參與！",
+                    isAdmin: isAdmin
                 });
             }, function() {
                 res.render("bookclub/created", {
                     menu: "bookclub",
-                    message: "由於技術上的問題發生錯誤，請與系統管理員聯絡，謝謝！"
+                    message: "由於技術上的問題發生錯誤，請與系統管理員聯絡，謝謝！",
+                    isAdmin: isAdmin
                 });
             });
         }

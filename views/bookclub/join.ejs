@@ -25,7 +25,7 @@
 	我想主持我的讀書會
 </button>
 <%}%>
-<%for(var i=0;i<data.length;i++){var time=new Date(data[i].date);%>
+<%if(data.length){;for(var i=0;i<data.length;i++){var time=new Date(data[i].date);%>
 <div class="col-md-12">
 	<h2>場次#<%=(i+1)%></h2>
 	<blockquote>
@@ -76,6 +76,8 @@
 		</small>
 	</blockquote>
 </div>
+<%}}else{%>
+<h1>目前沒有活動</h1>
 <%}%>
 <link rel="stylesheet" href="/css/bookclub/join.css" type="text/css" />
 <script src="/js/bookclub.js"></script>
