@@ -1,65 +1,91 @@
 var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
-var Db = require("../db");
+var Db = require("../modules/db");
 var joinDb = new Db(mongodbUri, "join");
 var listDb = new Db(mongodbUri, "booklist");
-var FB = require('fb');
-var bodyParser = require("body-parser");
+var isAdmin = require("../modules/isAdmin");
 var express = require("express");
 var router = express.Router();
-router.use(bodyParser());
 router.get("/", function(req, res) {
-    res.render("bookclub", {
-        menu: "bookclub"
+    isAdmin(req.cookies.accessToken, function(isAdmin) {
+        res.render("bookclub", {
+            menu: "bookclub",
+            isAdmin: isAdmin
+        });
     });
 });
 router.get("/list", function(req, res) {
-    listDb.select({}, function(data) {
-        res.render("bookclub/list", {
-            menu: "bookclub",
-            data: data
+    isAdmin(req.cookies.accessToken, function(isAdmin) {
+        listDb.select({}, function(data) {
+            res.render("bookclub/list", {
+                menu: "bookclub",
+                data: data,
+                isAdmin: isAdmin
+            });
+        }, function() {
+            res.redirect("/");
         });
-    }, function() {
-        res.redirect("/");
     });
 });
 router.get("/join", function(req, res) {
-    joinDb.select({date:{$gt: new Date().getTime()},isShow: true}, function(data) {
-        res.render("bookclub/join", {
-            menu: "bookclub",
-            data: data,
-            isHistory: false
+    isAdmin(req.cookies.accessToken, function(isAdmin) {
+        joinDb.select({
+            date: {
+                $gt: new Date().getTime()
+            },
+            isShow: true
+        }, function(data) {
+            res.render("bookclub/join", {
+                menu: "bookclub",
+                data: data,
+                isHistory: false,
+                isAdmin: isAdmin
+            });
+        }, function() {
+            res.redirect("/");
         });
-    }, function() {
-        res.redirect("/");
     });
 });
 router.get("/history", function(req, res) {
-    joinDb.select({$query:{date:{$lte: new Date().getTime()},isShow: true},$orderby:{date:-1}}, function(data) {
-        res.render("bookclub/join", {
-            menu: "bookclub",
-            data: data,
-            isHistory: true
+    isAdmin(req.cookies.accessToken, function(isAdmin) {
+        joinDb.select({
+            $query: {
+                date: {
+                    $lte: new Date().getTime()
+                },
+                isShow: true
+            },
+            $orderby: {
+                date: -1
+            }
+        }, function(data) {
+            res.render("bookclub/join", {
+                menu: "bookclub",
+                data: data,
+                isHistory: true,
+                isAdmin: isAdmin
+            });
+        }, function() {
+            res.redirect("/");
         });
-    }, function() {
-        res.redirect("/");
-    });    
+    });
 });
 router.get("/join/:id/:type", function(req, res) {
-    var token = req.cookies.accessToken;
-    FB.setAccessToken(token);
-    FB.api("/me", function(response) {
+    isAdmin(req.cookies.accessToken,function(isAdmin, response){
         if (!response || response.error) {
             res.json(false);
         }
         else {
-            joinDb.select({_id: joinDb.id(req.params.id)},function(data) {
+            joinDb.select({
+                _id: joinDb.id(req.params.id)
+            }, function(data) {
                 var user = data[0].user;
                 var index = user.indexOf(response.id);
                 var hasValue = index > -1;
                 if (req.params.type === "join") {
                     if (!hasValue && (!data[0].max || (data[0].max && user.length + 1 <= data[0].max))) {
                         user.push(response.id);
-                    } else {
+                    }
+                    else {
                         res.json(false);
                         return;
                     }
@@ -67,27 +93,28 @@ router.get("/join/:id/:type", function(req, res) {
                 if (req.params.type === "leave") {
                     if (hasValue) {
                         user.splice(index, 1);
-                    } else {
+                    }
+                    else {
                         res.json(false);
                         return;
                     }
                 }
-                joinDb.update(req.params.id,{user:user},function() {
-                    res.json(true);    
-                },function(data) {
+                joinDb.update(req.params.id, {
+                    user: user
+                }, function() {
+                    res.json(true);
+                }, function(data) {
                     console.log(data);
                     res.json(false);
                 });
-            },function() {
-                res.json(false);    
+            }, function() {
+                res.json(false);
             });
         }
     });
 });
 router.get("/create", function(req, res) {
-    var token = req.cookies.accessToken;
-    FB.setAccessToken(token);
-    FB.api("/me", function(response) {
+    isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
             res.redirect("/bookclub/join");
         }
@@ -107,15 +134,14 @@ router.get("/create", function(req, res) {
                 isHistory: false,
                 min: min,
                 wed: wed,
-                max: max
+                max: max,
+                isAdmin: isAdmin
             });
         }
     });
 });
 router.post("/create", function(req, res) {
-    var token = req.cookies.accessToken;
-    FB.setAccessToken(token);
-    FB.api("/me", function(response) {
+    isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
             res.redirect("/bookclub/join");
         }
@@ -125,7 +151,7 @@ router.post("/create", function(req, res) {
                 note: req.body.note,
                 host: [response.id],
                 user: [],
-                max: parseInt(req.body.max),
+                max: parseInt(req.body.max, 10),
                 isRead: false,
                 isShow: false
             };

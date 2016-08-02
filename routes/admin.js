@@ -1,37 +1,17 @@
 var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
-var Db = require("../db");
+var Db = require("../modules/db");
 var adminDb = new Db(mongodbUri, "admin");
-var FB = require('fb');
+var isAdmin = require("../modules/isAdmin");
 var express = require("express");
 var router = express.Router();
-var session = require("express-session");
-router.use(session({
-    secret: "secret",
-    cookie: {
-        maxAge: new Date(Date.now() + (60 * 1000 * 30))
-    }
-}));
 router.get("/", function(req, res) {
-    var token = req.cookies.accessToken;
-    FB.setAccessToken(token);
-    FB.api('/me', function(response) {
-        if (!response || response.error) {
-            res.redirect("/");
+    isAdmin(req.cookies.accessToken, function(isAdmin) {
+        if (isAdmin) {
+            req.session["admin"] = true;
+            res.redirect("/admin/user");
         }
         else {
-            adminDb.select({
-                fbid: response.id
-            }, function(data) {
-                if (data.length === 1) {
-                    req.session["admin"] = true;
-                    res.redirect("/admin/user");
-                }
-                else {
-                    res.redirect("/");
-                }
-            }, function() {
-                res.redirect("/");
-            });
+            res.redirect("/");
         }
     });
 });

@@ -55,6 +55,14 @@
     								<li>
     								    <a href="javascript:void(0);" class="myfb" target="_blank">我的Facebook</a>
     								</li>
+    								<%
+    								    var isAdmin = isAdmin || false;
+    								    if(isAdmin){
+    								%>
+    								<li>
+    								    <a href="/admin">網站管理</a>
+    								</li>
+    								<%}%>
     								<li>
     									<a href="javascript:void(0);" class="logout">登出</a>
     								</li>
