@@ -2,8 +2,9 @@ var async = require("async");
 var MongoClient = require("mongodb").MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var cache = null;
-module.exports = function(mongodbUri,collectionName,serverVision) {
+module.exports = function(mongodbUri, collectionName, serverVision) {
     serverVision = serverVision || "3.2";
+
     function asyncrun(callback) {
         async.waterfall([
             function(next) {
@@ -11,85 +12,101 @@ module.exports = function(mongodbUri,collectionName,serverVision) {
                     MongoClient.connect(mongodbUri, function(err, db) {
                         if (!err) {
                             cache = db;
-                            next(null,cache);
-                        } else {
-                            next(err,null);
+                            next(null, cache);
+                        }
+                        else {
+                            next(err, null);
                         }
                     });
-                } else {
-                    next(null,cache);
+                }
+                else {
+                    next(null, cache);
                 }
             }
-        ],function(err,db) {
-            callback(err,db && db.collection(collectionName));
+        ], function(err, db) {
+            callback(err, db && db.collection(collectionName));
         });
     }
-    this.insert = function(insertObject,success,error) {
-        asyncrun(function(err,dbc) {
+    this.insert = function(insertObject, success, error) {
+        asyncrun(function(err, dbc) {
             if (!err) {
                 dbc.insert(insertObject, function(err, result) {
                     if (!err) {
                         if (success) success(result);
-                    } else {
+                    }
+                    else {
                         if (error) error(err);
                     }
                 });
-            } else {
+            }
+            else {
                 if (error) error(err);
             }
         });
     }
-    this.select = function(filter,success,error,fetch) {
-        asyncrun(function(err,dbc) {
+    this.select = function(filter, success, error, fetch) {
+        asyncrun(function(err, dbc) {
             if (!err) {
                 if (!filter) {
                     filter = {};
                 }
                 var q = dbc.find(filter);
-                if (serverVision>="3.2" && filter.$orderby) {
+                if (serverVision >= "3.2" && filter.$orderby) {
                     q = q.sort(filter.$orderby);
                 }
                 if (fetch) {
                     q = q.limit(fetch);
                 }
-                q.toArray(function(err,data) {
+                q.toArray(function(err, data) {
                     if (!err) {
                         if (success) success(data);
-                    } else {
+                    }
+                    else {
                         if (error) error(err);
                     }
                 });
-            } else {
+            }
+            else {
                 if (error) error(err);
             }
         });
     }
-    this.update = function(id,updateObject,success,error) {
-        asyncrun(function(err,dbc) {
+    this.update = function(id, updateObject, success, error) {
+        asyncrun(function(err, dbc) {
             if (!err) {
-                dbc.update({_id: new ObjectId(id)},{$set:updateObject},function(err,data) {
+                dbc.update({
+                    _id: new ObjectId(id)
+                }, {
+                    $set: updateObject
+                }, function(err, data) {
                     if (!err) {
                         if (success) success(data);
-                    } else {
+                    }
+                    else {
                         if (error) error(err);
                     }
                 });
-            } else {
+            }
+            else {
                 if (error) error(err);
             }
         });
     }
-    this.remove = function(id,success,error) {
-        asyncrun(function(err,dbc) {
+    this.remove = function(id, success, error) {
+        asyncrun(function(err, dbc) {
             if (!err) {
-                dbc.remove({_id: new ObjectId(id)},function(err,data){
+                dbc.remove({
+                    _id: new ObjectId(id)
+                }, function(err, data) {
                     if (!err) {
                         if (success) success(data);
-                    } else {
+                    }
+                    else {
                         if (error) error(err);
                     }
                 });
-            } else {
+            }
+            else {
                 if (error) error(err);
             }
         });

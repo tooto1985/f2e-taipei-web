@@ -5,15 +5,18 @@ var expressLayouts = require("express-ejs-layouts");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var session = require("express-session");
-var isAdmin = require("./modules/isAdmin");
-var admin = require("./routes/admin");
+var root = require("./routes/root");
 var bookclub = require("./routes/bookclub");
+var facebook = require("./routes/facebook");
+var slack = require("./routes/slack");
+var admin = require("./routes/admin");
 var app = express();
 app.use(session({
     secret: "secret",
     cookie: {
-        maxAge: new Date(Date.now() + (60 * 1000 * 30))
-    }
+        maxAge: 60 * 1000 * 30
+    },
+    rolling: true
 }));
 app.use(bodyParser());
 app.use(cookieParser());
@@ -24,30 +27,9 @@ app.set("view engine", "ejs");
 app.set("layout", "layout");
 app.use(expressLayouts);
 app.use(express.static(path.join(__dirname, "public")));
-app.get("/", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
-        res.render("index", {
-            menu: "index",
-            isAdmin: isAdmin
-        });
-    });
-});
+app.use("/", root);
 app.use("/bookclub", bookclub);
-app.get("/facebook", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
-        res.render("facebook", {
-            menu: "facebook",
-            isAdmin: isAdmin
-        });
-    });
-});
-app.get("/slack", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
-        res.render("slack", {
-            menu: "slack",
-            isAdmin: isAdmin
-        });
-    });
-});
+app.use("/facebook", facebook);
+app.use("/slack", slack);
 app.use("/admin", admin);
 app.listen(3000);

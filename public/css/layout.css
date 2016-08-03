@@ -15,7 +15,7 @@
 
 .footer {
     background-color:#232323;
-    height:2em;
+    min-height:2em;
     text-align:center;
     color:white;
     font-size:1em;

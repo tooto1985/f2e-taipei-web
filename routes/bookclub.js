@@ -70,7 +70,7 @@ router.get("/history", function(req, res) {
     });
 });
 router.get("/join/:id/:type", function(req, res) {
-    isAdmin(req.cookies.accessToken,function(isAdmin, response){
+    isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
             res.json(false);
         }
@@ -117,9 +117,9 @@ router.get("/create", function(req, res) {
     function getLocalDate(date) {
         var a = date.toLocaleDateString().split("/");
         a = a.map(function(a) {
-            return parseInt(a);
-        })
-        return a[2] + "-" + (a[0]<10?"0":"") + a[0] + "-" + (a[1]<10?"0":"") + a[1];
+            return parseInt(a, 10);
+        });
+        return a[2] + "-" + (a[0] < 10 ? "0" : "") + a[0] + "-" + (a[1] < 10 ? "0" : "") + a[1];
     }
     isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
