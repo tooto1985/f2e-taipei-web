@@ -1,6 +1,6 @@
-var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
+exports.mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
 var Db = require("../modules/db");
-var adminDb = new Db(mongodbUri, "admin");
+var adminDb = new Db(exports.mongodbUri, "admin");
 var FB = require('fb');
 exports.isAdmin = function(token, callback) {
     FB.setAccessToken(token);

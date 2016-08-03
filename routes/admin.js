@@ -1,7 +1,6 @@
-var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
-var Db = require("../modules/db");
-var joinDb = new Db(mongodbUri, "join");
 var tools = require("../modules/tools");
+var Db = require("../modules/db");
+var joinDb = new Db(tools.mongodbUri, "join");
 var express = require("express");
 var router = express.Router();
 router.get("/", function(req, res) {
