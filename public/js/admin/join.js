@@ -54,6 +54,12 @@ $(function() {
         }
     });      
     
+    $(".edit").click(function() {
+        var id = $(this).parent().parent().data("id");
+        location.href="/admin/join/edit/" + id;
+
+    });        
+    
     window.fbAsyncInit = function() {
         FB.getLoginStatus(function(response) {
             $("div[data-fbid]").each(getFBdata);   

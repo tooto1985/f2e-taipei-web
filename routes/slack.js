@@ -1,8 +1,8 @@
-var isAdmin = require("../modules/isAdmin");
+var tools = require("../modules/tools");
 var express = require("express");
 var router = express.Router();
 router.get("/", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin) {
         res.render("slack", {
             menu: "slack",
             isAdmin: isAdmin

@@ -32,3 +32,16 @@
         padding-bottom: 0;
     }
 }
+
+.ad2 {
+    display:none;
+}
+
+@media (max-width: 1018px) {
+    .ad1 {
+        display:none;
+    }
+    .ad2 {
+        display:block;
+    }
+}

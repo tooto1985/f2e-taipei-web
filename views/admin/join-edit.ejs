@@ -1,0 +1,65 @@
+<p></p>
+<div class="col-md-12">
+	<form class="form-horizontal" role="form" method="post" action="/admin/join/edit">
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				舉辦日期
+			</label>
+			<div class="col-sm-11">
+				<input type="date" name="date" class="form-control" value="<%=date%>" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				開始時間
+			</label>
+			<div class="col-sm-11">
+				<input type="time" name="time" class="form-control" value="<%=time%>" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				主持人
+			</label>
+			<div class="col-sm-11">
+			    <input type="text" name="host" class="form-control" value="<%=data.host%>">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				參與者
+			</label>
+			<div class="col-sm-11">
+			    <textarea class="form-control" name="user" rows="5"><%=data.user%></textarea>
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				人數限制
+			</label>
+			<div class="col-sm-11">
+				<input type="text" name="max" class="form-control" value="<%=data.max%>">
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="col-sm-1 control-label">
+				書與進度
+			</label>
+			<div class="col-sm-11">
+				<textarea class="form-control" name="note" rows="5"><%=data.note%></textarea>
+			</div>
+		</div>		
+		<div class="form-group">
+			<div class="col-sm-offset-1 col-sm-11">
+			    <button type="submit" class="btn btn-default" onclick="history.back();">
+					回上一頁
+				</button>
+				<button type="submit" class="btn btn-default">
+					確定更新
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>

@@ -2,11 +2,11 @@ var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
 var Db = require("../modules/db");
 var joinDb = new Db(mongodbUri, "join");
 var listDb = new Db(mongodbUri, "booklist");
-var isAdmin = require("../modules/isAdmin");
+var tools = require("../modules/tools");
 var express = require("express");
 var router = express.Router();
 router.get("/", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin) {
         res.render("bookclub", {
             menu: "bookclub",
             isAdmin: isAdmin
@@ -14,7 +14,7 @@ router.get("/", function(req, res) {
     });
 });
 router.get("/list", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin) {
         listDb.select({}, function(data) {
             res.render("bookclub/list", {
                 menu: "bookclub",
@@ -27,7 +27,7 @@ router.get("/list", function(req, res) {
     });
 });
 router.get("/join", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin) {
         joinDb.select({
             date: {
                 $gt: new Date().getTime()
@@ -46,7 +46,7 @@ router.get("/join", function(req, res) {
     });
 });
 router.get("/history", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin) {
         joinDb.select({
             $query: {
                 date: {
@@ -70,7 +70,7 @@ router.get("/history", function(req, res) {
     });
 });
 router.get("/join/:id/:type", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin, response) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
             res.json(false);
         }
@@ -114,27 +114,20 @@ router.get("/join/:id/:type", function(req, res) {
     });
 });
 router.get("/create", function(req, res) {
-    function getLocalDate(date) {
-        var a = date.toLocaleDateString().split("/");
-        a = a.map(function(a) {
-            return parseInt(a, 10);
-        });
-        return a[2] + "-" + (a[0] < 10 ? "0" : "") + a[0] + "-" + (a[1] < 10 ? "0" : "") + a[1];
-    }
-    isAdmin(req.cookies.accessToken, function(isAdmin, response) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
             res.redirect("/bookclub/join");
         }
         else {
-            var min = getLocalDate(new Date());
+            var min = tools.getLocalDate(new Date());
             var wed = new Date();
             var max = new Date();
             do {
                 wed.setDate(wed.getDate() + 1);
             } while (wed.getDay() !== 3);
-            wed = getLocalDate(wed);
+            wed = tools.getLocalDate(wed);
             max.setMonth(max.getMonth() + 1);
-            max = getLocalDate(max);
+            max = tools.getLocalDate(max);
             res.render("bookclub/create", {
                 menu: "bookclub",
                 data: null,
@@ -148,7 +141,7 @@ router.get("/create", function(req, res) {
     });
 });
 router.post("/create", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin, response) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin, response) {
         if (!response || response.error) {
             res.redirect("/bookclub/join");
         }

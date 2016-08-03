@@ -1,11 +1,11 @@
 var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
 var Db = require("../modules/db");
 var joinDb = new Db(mongodbUri, "join");
-var isAdmin = require("../modules/isAdmin");
+var tools = require("../modules/tools");
 var express = require("express");
 var router = express.Router();
 router.get("/", function(req, res) {
-    isAdmin(req.cookies.accessToken, function(isAdmin) {
+    tools.isAdmin(req.cookies.accessToken, function(isAdmin) {
         if (isAdmin) {
             req.session["admin"] = true;
             res.redirect("/admin/user");
@@ -114,5 +114,26 @@ router.get("/join/reset/:id", function(req, res) {
     else {
         res.redirect("/");
     }
+});
+router.get("/join/edit/:id", function(req, res) {
+    if (req.session["admin"]) {
+        joinDb.select({
+            _id: joinDb.id(req.params.id)
+        }, function(data) {
+            res.render("admin/join-edit",{
+                layout: "admin",
+                menu: "join",
+                data: data[0],
+                date: tools.getLocalDate(new Date(data[0].date)),
+                time: tools.getLocalTime(new Date(data[0].date))
+            });
+        }, function() {
+            res.redirect("/");
+        });
+    }
+    else {
+        res.redirect("/");
+    }
+
 });
 module.exports = router;
