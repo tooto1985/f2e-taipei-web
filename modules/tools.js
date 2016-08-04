@@ -3,32 +3,45 @@ var Db = require("../modules/db");
 var adminDb = new Db(mongodbUri, "admin");
 var joinDb = new Db(mongodbUri, "join");
 var FB = require('fb');
-exports.mongodbUri = mongodbUri;
-exports.isAdmin = function(token, callback) {
-    FB.setAccessToken(token);
-    FB.api('/me', function(response) {
-        if (response && !response.error) {
-            adminDb.select({
-                fbid: response.id
-            }, function(data) {
-                if (data.length === 1) {
-                    joinDb.select({isRead:false, isShow: false},function(data) {
-                        callback({count:data.length}, response);
-                    },function(){
-                        callback(true, response);    
-                    });
-                }
-                else {
-                    callback(false, response);
-                }
-            }, function() {
-                callback(false, response);
+var cache={};
+function fbcheck(response,callback) {
+    adminDb.select({
+        fbid: response.id
+    }, function(data) {
+        if (data.length === 1) {
+            joinDb.select({isRead:false, isShow: false},function(data) {
+                callback({count:data.length}, response);
+            },function(){
+                callback(true, response);    
             });
         }
         else {
+            callback(false, response);
+        }
+    }, function() {
+        callback(false, response);
+    });
+}
+exports.mongodbUri = mongodbUri;
+exports.isAdmin = function(token, callback) {
+    if (cache[token]) {
+        fbcheck(cache[token],callback);
+    } else {
+        if(token) {
+            FB.setAccessToken(token);
+            FB.api('/me', function(response) {
+                if (response && !response.error) {
+                    cache[token] = response;
+                    fbcheck(response,callback);
+                }
+                else {
+                    callback(false);
+                }
+            });
+        } else {
             callback(false);
         }
-    });
+    }
 };
 exports.getLocalDate = function(date) {
     var a = date.toLocaleDateString().split("/");
