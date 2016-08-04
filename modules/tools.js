@@ -1,7 +1,9 @@
-exports.mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
+var mongodbUri = "mongodb://127.0.0.1/f2e-taipei";
 var Db = require("../modules/db");
-var adminDb = new Db(exports.mongodbUri, "admin");
+var adminDb = new Db(mongodbUri, "admin");
+var joinDb = new Db(mongodbUri, "join");
 var FB = require('fb');
+exports.mongodbUri = mongodbUri;
 exports.isAdmin = function(token, callback) {
     FB.setAccessToken(token);
     FB.api('/me', function(response) {
@@ -10,7 +12,11 @@ exports.isAdmin = function(token, callback) {
                 fbid: response.id
             }, function(data) {
                 if (data.length === 1) {
-                    callback(true, response);
+                    joinDb.select({isRead:false, isShow: false},function(data) {
+                        callback({count:data.length}, response);
+                    },function(){
+                        callback(true, response);    
+                    });
                 }
                 else {
                     callback(false, response);
