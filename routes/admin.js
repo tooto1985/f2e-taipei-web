@@ -119,7 +119,7 @@ router.get("/join/edit/:id", function(req, res) {
         joinDb.select({
             _id: joinDb.id(req.params.id)
         }, function(data) {
-            res.render("admin/join-edit",{
+            res.render("admin/join-edit", {
                 layout: "admin",
                 menu: "join",
                 data: data[0],
@@ -133,6 +133,33 @@ router.get("/join/edit/:id", function(req, res) {
     else {
         res.redirect("/");
     }
-
+});
+router.post("/join/edit/:id", function(req, res) {
+    if (req.session["admin"]) {
+        var updateObject = {
+            $set: {
+                date: new Date(req.body.date + " " + req.body.time).getTime(),
+                host: req.body.host.split(","),
+                user: req.body.user !== "" ? req.body.user.split(",") : [],
+                note: req.body.note
+            }
+        };
+        if (req.body.max) {
+            updateObject.$set.max = parseInt(req.body.max, 10);
+        }
+        else {
+            updateObject.$unset = {
+                max: 1
+            };
+        }
+        joinDb.update(joinDb.id(req.params.id), updateObject, function() {
+            res.redirect("/admin/join");
+        }, function() {
+            res.redirect("/");
+        });
+    }
+    else {
+        res.redirect("/");
+    }
 });
 module.exports = router;

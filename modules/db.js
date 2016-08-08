@@ -74,11 +74,14 @@ module.exports = function(mongodbUri, collectionName, serverVersion) {
     this.update = function(id, updateObject, success, error) {
         asyncrun(function(err, dbc) {
             if (!err) {
+                if (!updateObject.$set && !updateObject.$unset) {
+                    updateObject = {
+                        $set: updateObject
+                    };
+                }
                 dbc.update({
                     _id: new ObjectId(id)
-                }, {
-                    $set: updateObject
-                }, function(err, data) {
+                }, updateObject, function(err, data) {
                     if (!err) {
                         if (success) success(data);
                     }
