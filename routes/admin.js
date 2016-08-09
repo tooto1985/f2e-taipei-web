@@ -22,7 +22,7 @@ router.get("/user", function(req, res) {
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.get("/booklist", function(req, res) {
@@ -33,7 +33,7 @@ router.get("/booklist", function(req, res) {
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.get("/join", function(req, res) {
@@ -50,11 +50,11 @@ router.get("/join", function(req, res) {
                 data: data
             });
         }, function() {
-            res.redirect("/");
+            res.redirect("/admin");
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.get("/join/delete/:id", function(req, res) {
@@ -62,11 +62,11 @@ router.get("/join/delete/:id", function(req, res) {
         joinDb.remove(req.params.id, function() {
             res.redirect("/admin/join");
         }, function() {
-            res.redirect("/");
+            res.redirect("/admin");
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.get("/join/reject/:id", function(req, res) {
@@ -77,11 +77,11 @@ router.get("/join/reject/:id", function(req, res) {
         }, function() {
             res.redirect("/admin/join");
         }, function() {
-            res.redirect("/");
+            res.redirect("/admin");
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.get("/join/resolve/:id", function(req, res) {
@@ -92,11 +92,11 @@ router.get("/join/resolve/:id", function(req, res) {
         }, function() {
             res.redirect("/admin/join");
         }, function() {
-            res.redirect("/");
+            res.redirect("/admin");
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.get("/join/reset/:id", function(req, res) {
@@ -107,11 +107,11 @@ router.get("/join/reset/:id", function(req, res) {
         }, function() {
             res.redirect("/admin/join");
         }, function() {
-            res.redirect("/");
+            res.redirect("/admin");
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.get("/join/edit/:id", function(req, res) {
@@ -127,11 +127,11 @@ router.get("/join/edit/:id", function(req, res) {
                 time: tools.getLocalTime(new Date(data[0].date))
             });
         }, function() {
-            res.redirect("/");
+            res.redirect("/admin");
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 router.post("/join/edit/:id", function(req, res) {
@@ -155,11 +155,11 @@ router.post("/join/edit/:id", function(req, res) {
         joinDb.update(joinDb.id(req.params.id), updateObject, function() {
             res.redirect("/admin/join");
         }, function() {
-            res.redirect("/");
+            res.redirect("/admin");
         });
     }
     else {
-        res.redirect("/");
+        res.redirect("/admin");
     }
 });
 module.exports = router;
